@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员查询</title>
+</head>
+<body>
+    <h1>查询会员信息</h1>
+    <form id="memberForm">
+        <label for="query">输入名称或者ID:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">查询</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('memberForm').onsubmit = async function(event) {
+            event.preventDefault();  // 阻止表单默认提交行为
+            const formData = new FormData(event.target);
+            try {
+                const response = await fetch('http://localhost:5050/check_member', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) throw new Error('请求失败');
+                const result = await response.json();
+                document.getElementById('result').innerText = result.message; // 仅显示message
+            } catch (error) {
+                document.getElementById('result').innerText = `请求失败: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>
